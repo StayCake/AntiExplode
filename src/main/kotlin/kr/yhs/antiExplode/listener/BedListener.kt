@@ -1,11 +1,12 @@
 package kr.yhs.antiExplode.listener
 
 import io.papermc.paper.event.player.PlayerBedFailEnterEvent
-import kr.yhs.antiExplode.AntiExplode
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 
-class BedListener(private val plugin: AntiExplode) : BaseListener(), Listener {
+class BedListener : BaseListener, Listener {
+    override val type: String
+        get() = "Bed"
     @EventHandler
     fun onBedFailEnter(event: PlayerBedFailEnterEvent) {
         if (

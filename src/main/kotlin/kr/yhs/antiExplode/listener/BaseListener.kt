@@ -1,21 +1,26 @@
 package kr.yhs.antiExplode.listener
 
 import kr.yhs.antiExplode.AntiExplode
-import net.kyori.adventure.audience.Audience
-import net.kyori.adventure.title.Title
 import org.bukkit.World
+import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.entity.Player
 
-abstract class BaseListener {
+interface BaseListener {
+
+    val type: String
+
+    fun baseConfig(): FileConfiguration {
+        return AntiExplode.instance.config
+    }
     fun getExplodeConfig(name: String, world: World): Boolean =
-        AntiExplode.instance?.config?.getConfigurationSection(world.name)?.getBoolean(name) ?: false
+        baseConfig().getConfigurationSection(world.name)?.getBoolean(name) ?: false
 
     private fun formatPlayer(player: Player, comment: String): String =
-        comment.replace("{player}", player.name.toString())
+        comment.replace("{player}", player.name)
 
     fun sendMessage(player: Player, name: String) {
         val comment: String =
-            AntiExplode.instance?.config?.getConfigurationSection("comment")?.getString(name) ?: return
+            baseConfig().getConfigurationSection("comment")?.getString(name) ?: return
         sendComment(player, comment)
     }
 

@@ -5,33 +5,41 @@ import kr.yhs.antiExplode.listener.BedListener
 import kr.yhs.antiExplode.listener.BlockListener
 import kr.yhs.antiExplode.listener.EntityListener
 import org.bukkit.Bukkit
-import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 
-class AntiExplode : JavaPlugin(), Listener {
-    var debug: Boolean = config.getBoolean("debug")
-    val globalBlockExplode: Boolean = config.getBoolean("globalBlockExplode")
-    val globalEntityExplode: Boolean = config.getBoolean("globalEntityExplode")
+class AntiExplode : JavaPlugin(){
 
     companion object {
-        var instance: AntiExplode? = null
+        lateinit var instance: AntiExplode
+            private set
+        var debug: Boolean = false
+        var globalBlockExplode: Boolean = false
+        var globalEntityExplode: Boolean = false
+    }
+
+    override fun onLoad() {
+        Bukkit.getLogger().info("AntiExplode - Now Loading... [${description.version}")
     }
 
     override fun onEnable() {
         instance = this
+
+        reloadConfig()
+        debug = config.getBoolean("debug")
+        globalBlockExplode = config.getBoolean("globalBlockExplode")
+        globalEntityExplode = config.getBoolean("globalEntityExplode")
+
         if (!dataFolder.exists()) {
             this.saveDefaultConfig()
             Bukkit.getLogger().info("AntiExplode - Initialized configuration!")
         }
-        server.pluginManager.registerEvents(this, this)
-        Bukkit.getLogger().info("AntiExplode - Minecraft listener registered!")
         server.pluginManager.apply {
-            registerEvents(AnchorListener(this@AntiExplode), this@AntiExplode)
-            registerEvents(BedListener(this@AntiExplode), this@AntiExplode)
-            registerEvents(BlockListener(this@AntiExplode), this@AntiExplode)
-            registerEvents(EntityListener(this@AntiExplode), this@AntiExplode)
+            registerEvents(AnchorListener(), this@AntiExplode)
+            registerEvents(BedListener(), this@AntiExplode)
+            registerEvents(BlockListener(), this@AntiExplode)
+            registerEvents(EntityListener(), this@AntiExplode)
         }
-        Bukkit.getLogger().info("AntiExplode - AntiExplode Plugin load done.")
+        Bukkit.getLogger().info("AntiExplode - Minecraft listener registered!")
     }
 
     override fun onDisable() {

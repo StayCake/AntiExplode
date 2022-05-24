@@ -1,6 +1,5 @@
 package kr.yhs.antiExplode.listener
 
-import kr.yhs.antiExplode.AntiExplode
 import org.bukkit.Material
 import org.bukkit.block.data.type.RespawnAnchor
 import org.bukkit.event.EventHandler
@@ -9,7 +8,9 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.EquipmentSlot
 
-class AnchorListener(private val plugin: AntiExplode) : BaseListener(), Listener {
+class AnchorListener : BaseListener, Listener {
+    override val type: String
+        get() = "Anchor"
     @EventHandler
     fun onPlayerInteractEvent(interact: PlayerInteractEvent) {
         if (
@@ -32,4 +33,5 @@ class AnchorListener(private val plugin: AntiExplode) : BaseListener(), Listener
     private fun checkExplode(blockData: RespawnAnchor, handMaterial: Material): Boolean =
         (blockData.charges >= blockData.maximumCharges && handMaterial == Material.GLOWSTONE) ||
                 (handMaterial != Material.GLOWSTONE && blockData.charges >= 0)
+
 }
